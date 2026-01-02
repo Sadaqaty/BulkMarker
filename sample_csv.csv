@@ -1,0 +1,3 @@
+video,watermark,text,position
+video1.mp4,logo.png,Title 1,center
+video2.mp4,watermark.png,Title 2,right-bottom

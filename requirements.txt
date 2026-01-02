@@ -1,0 +1,5 @@
+PySide6
+moviepy
+opencv-python
+Pillow
+numpy
