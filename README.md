@@ -25,7 +25,18 @@ A production-grade desktop GUI application for bulk video overlay and watermarki
 
 ## Usage
 
-Run the application: `python main.py`
+Activate the virtual environment and run the application:
+
+```bash
+source venv/bin/activate
+python main.py
+```
+
+Or use the provided run script:
+
+```bash
+./run.sh
+```
 
 ### Tabs
 
