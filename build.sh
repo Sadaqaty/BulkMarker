@@ -110,7 +110,7 @@ fi
 
 # For Linux, create AppImage if appimagetool is available
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    if command -v appimagetool &> /dev/null; then
+    if [ -f "./appimagetool" ]; then
         echo "Creating AppImage..."
         
         # Create AppDir structure
@@ -137,6 +137,9 @@ Type=Application
 Categories=Utility;Video;
 EOF
         
+        # Also copy desktop file to AppDir root for appimagetool
+        cp "$APPDIR/usr/share/applications/bulk-video-watermarker.desktop" "$APPDIR/"
+        
         # Create AppRun script
         cat > "$APPDIR/AppRun" << EOF
 #!/bin/bash
@@ -148,7 +151,7 @@ EOF
         chmod +x "$APPDIR/AppRun"
         
         # Build AppImage
-        appimagetool "$APPDIR" "dist/bulk-video-watermarker.AppImage"
+        ./appimagetool "$APPDIR" "dist/bulk-video-watermarker.AppImage"
         
         if [ $? -eq 0 ]; then
             echo "AppImage created: dist/bulk-video-watermarker.AppImage"
@@ -159,7 +162,7 @@ EOF
         # Clean up
         rm -rf "$APPDIR"
     else
-        echo "appimagetool not found, skipping AppImage creation. Install with: sudo apt install appimagetool"
+        echo "appimagetool not found in root directory, skipping AppImage creation."
     fi
 fi
 
