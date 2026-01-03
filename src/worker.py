@@ -1,7 +1,8 @@
 import os
+import math
 from PySide6.QtCore import QThread, Signal
 import os
-from moviepy import VideoFileClip, ImageClip, TextClip, CompositeVideoClip
+from moviepy import VideoFileClip, ImageClip, TextClip, CompositeVideoClip, concatenate_videoclips
 
 class Worker(QThread):
     progress = Signal(str)
@@ -53,9 +54,13 @@ class Worker(QThread):
                         wm = wm.resized(width=int(clip.w * overlay['scale']))
                     except Exception as e:
                         raise Exception(f"Failed to load video {overlay['file']}: {str(e)}")
-                    wm = wm.with_duration(clip.duration).with_position(overlay['position']).with_opacity(overlay['opacity'])
                     if overlay.get('loop', False):
-                        wm = wm.loop(duration=clip.duration)
+                        loops = math.ceil(clip.duration / wm.duration)
+                        wm = concatenate_videoclips([wm] * loops)
+                        wm = wm.subclipped(0, clip.duration)
+                    else:
+                        wm = wm.with_duration(clip.duration)
+                    wm = wm.with_position(overlay['position']).with_opacity(overlay['opacity'])
                     clip = CompositeVideoClip([clip, wm])
                 elif overlay['type'] == 'text':
                     try:
@@ -65,6 +70,6 @@ class Worker(QThread):
                     txt_clip = txt_clip.with_position(overlay['position']).with_duration(clip.duration).with_opacity(overlay['opacity'])
                     clip = CompositeVideoClip([clip, txt_clip])
             out_path = os.path.join(self.output_dir, os.path.basename(video_path))
-            clip.write_videofile(out_path, codec="libx264", audio_codec="aac", progress_callback=lambda p: self.progress.emit(f"Writing {os.path.basename(video_path)}: {int(p*100)}%"))
+            clip.write_videofile(out_path, codec="libx264", audio_codec="aac")
         except Exception as e:
             raise Exception(f"Error processing {video_path}: {str(e)}")

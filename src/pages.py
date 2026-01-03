@@ -145,7 +145,6 @@ def create_bulk_processing_page(main_window):
     main_window.process_button.clicked.connect(main_window.start_processing)
 
     # Progress
-    main_window.progress_bar = QProgressBar()
     main_window.progress_label = QLabel("Ready")
 
     layout.addWidget(input_group)
@@ -154,7 +153,6 @@ def create_bulk_processing_page(main_window):
     layout.addWidget(main_window.overlay_stack)
     layout.addWidget(main_window.process_button)
     layout.addWidget(main_window.progress_label)
-    layout.addWidget(main_window.progress_bar)
 
     page.setLayout(layout)
     return page
