@@ -125,6 +125,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         # Copy icon if available
         if [ -f "assets/icon.png" ]; then
             cp "assets/icon.png" "$APPDIR/usr/share/icons/hicolor/256x256/apps/bulk-video-watermarker.png"
+            cp "assets/icon.png" "$APPDIR/bulk-video-watermarker.png"
         fi
         
         # Create desktop file
@@ -134,7 +135,7 @@ Name=Bulk Video Watermarker
 Exec=bulk-video-watermarker
 Icon=bulk-video-watermarker
 Type=Application
-Categories=Utility;Video;
+Categories=AudioVideo;Video;
 EOF
         
         # Also copy desktop file to AppDir root for appimagetool
