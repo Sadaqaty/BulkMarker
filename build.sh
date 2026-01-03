@@ -77,25 +77,92 @@ if [ -d "dist" ]; then
 fi
 
 # Build with PyInstaller
-pyinstaller --onefile --windowed --name bulk-video-watermarker \
-    --add-data "src${SEP}src" \
-    --add-data "presets${SEP}presets" \
+PYINSTALLER_CMD="pyinstaller --onefile --windowed --name bulk-video-watermarker \
+    --add-data \"src${SEP}src\" \
+    --add-data \"presets${SEP}presets\" \
     --hidden-import PySide6.QtCore \
     --hidden-import PySide6.QtGui \
     --hidden-import PySide6.QtWidgets \
     --hidden-import moviepy \
     --hidden-import moviepy.video.fx \
     --hidden-import moviepy.video.io.ffmpeg_reader \
-    --hidden-import moviepy.video.io.ffmpeg_writer \
-    main.py
+    --hidden-import moviepy.video.io.ffmpeg_writer"
+
+# Add icon if available
+if [ -f "assets/icon.png" ]; then
+    PYINSTALLER_CMD="$PYINSTALLER_CMD --icon assets/icon.png"
+    echo "Using icon: assets/icon.png"
+else
+    echo "Warning: assets/icon.png not found, building without icon"
+fi
+
+eval $PYINSTALLER_CMD main.py
 
 if [ $? -ne 0 ]; then
     echo "Error: PyInstaller build failed."
     exit 1
 fi
 
+# For Linux, create AppImage if appimagetool is available
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    if command -v appimagetool &> /dev/null; then
+        echo "Creating AppImage..."
+        
+        # Create AppDir structure
+        APPDIR="AppDir"
+        mkdir -p "$APPDIR/usr/bin"
+        mkdir -p "$APPDIR/usr/share/applications"
+        mkdir -p "$APPDIR/usr/share/icons/hicolor/256x256/apps"
+        
+        # Copy executable
+        cp "dist/bulk-video-watermarker" "$APPDIR/usr/bin/"
+        
+        # Copy icon if available
+        if [ -f "assets/icon.png" ]; then
+            cp "assets/icon.png" "$APPDIR/usr/share/icons/hicolor/256x256/apps/bulk-video-watermarker.png"
+        fi
+        
+        # Create desktop file
+        cat > "$APPDIR/usr/share/applications/bulk-video-watermarker.desktop" << EOF
+[Desktop Entry]
+Name=Bulk Video Watermarker
+Exec=bulk-video-watermarker
+Icon=bulk-video-watermarker
+Type=Application
+Categories=Utility;Video;
+EOF
+        
+        # Create AppRun script
+        cat > "$APPDIR/AppRun" << EOF
+#!/bin/bash
+HERE="\$(dirname "\$(readlink -f "\${0}")")"
+export PATH="\$HERE/usr/bin:\$PATH"
+export LD_LIBRARY_PATH="\$HERE/usr/lib:\$LD_LIBRARY_PATH"
+exec "\$HERE/usr/bin/bulk-video-watermarker" "\$@"
+EOF
+        chmod +x "$APPDIR/AppRun"
+        
+        # Build AppImage
+        appimagetool "$APPDIR" "dist/bulk-video-watermarker.AppImage"
+        
+        if [ $? -eq 0 ]; then
+            echo "AppImage created: dist/bulk-video-watermarker.AppImage"
+        else
+            echo "Warning: AppImage creation failed"
+        fi
+        
+        # Clean up
+        rm -rf "$APPDIR"
+    else
+        echo "appimagetool not found, skipping AppImage creation. Install with: sudo apt install appimagetool"
+    fi
+fi
+
 echo "=== Build Complete ==="
 echo "Executable created: dist/bulk-video-watermarker"
+if [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f "dist/bulk-video-watermarker.AppImage" ]; then
+    echo "AppImage created: dist/bulk-video-watermarker.AppImage"
+fi
 echo "Run it with: ./dist/bulk-video-watermarker"
 echo ""
 echo "Note: Ensure FFmpeg is installed on the target system for video processing."

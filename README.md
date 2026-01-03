@@ -36,7 +36,13 @@ This script will:
 - Install all required dependencies
 - Check for FFmpeg availability
 - Build the executable with PyInstaller
-- Output the executable in `dist/bulk-video-watermarker`
+- On Linux, create an AppImage if `appimagetool` is available
+- Use `assets/icon.png` as the application icon if present
+
+**Icon Setup:**
+- Place your application icon as `assets/icon.png` (PNG format, 256x256 recommended)
+- The icon will be embedded in the executable for all platforms
+- For Linux AppImage, the icon is also included in the package
 
 The build script is designed for multi-platform use - run it on Linux, macOS, or Windows to build for that platform.
 
