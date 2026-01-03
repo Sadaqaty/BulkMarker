@@ -23,7 +23,32 @@ A production-grade desktop GUI application for bulk video overlay and watermarki
 4. Install dependencies: `pip install -r requirements.txt`
 5. Ensure FFmpeg is installed: `sudo apt install ffmpeg` (on Linux)
 
-## Building
+## Usage
+
+Activate the virtual environment and run the application:
+
+```bash
+source venv/bin/activate
+python main.py
+```
+
+Or use the provided run script:
+
+```bash
+./run.sh
+```
+
+### Interface
+
+The application features a streamlined single-panel interface for bulk video processing:
+
+- **Input Folder**: Select the folder containing videos to process
+- **Output Folder**: Choose where processed videos will be saved
+- **Overlay Type**: Choose between Image, Video, or Text overlays
+- **Overlay Configuration**: Configure scale, position, opacity, and other settings
+- **Process Button**: Start bulk processing with real-time progress updates
+
+### Presets
 
 To build a standalone executable for your platform (handles fresh clones automatically):
 
@@ -115,3 +140,14 @@ Use PyInstaller to package: `pyinstaller --onefile --windowed main.py`
 ├── presets/                # Preset files
 └── tests/                  # Unit tests
 ```
+
+## Web Presence
+
+Visit our landing page at [fixare.studio](https://fixare.studio) to learn more about Bulk Video Watermarker and download the latest versions for your platform.
+
+The `web/` directory contains the source code for our landing page, featuring:
+- Modern glass-morphism design with light colors
+- Comprehensive feature showcase
+- Use case studies for faceless channel management
+- About Fixare Studio
+- Cross-platform download links

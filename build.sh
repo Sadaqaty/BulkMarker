@@ -80,13 +80,18 @@ fi
 PYINSTALLER_CMD="pyinstaller --onefile --windowed --name bulk-video-watermarker \
     --add-data \"src${SEP}src\" \
     --add-data \"presets${SEP}presets\" \
+    --collect-all moviepy \
+    --collect-all imageio \
     --hidden-import PySide6.QtCore \
     --hidden-import PySide6.QtGui \
     --hidden-import PySide6.QtWidgets \
-    --hidden-import moviepy \
-    --hidden-import moviepy.video.fx \
-    --hidden-import moviepy.video.io.ffmpeg_reader \
-    --hidden-import moviepy.video.io.ffmpeg_writer"
+    --hidden-import numpy \
+    --hidden-import PIL \
+    --hidden-import cv2 \
+    --hidden-import tqdm \
+    --hidden-import decorator \
+    --hidden-import proglog \
+    --hidden-import importlib.metadata"
 
 # Add icon if available
 if [ -f "assets/icon.png" ]; then
