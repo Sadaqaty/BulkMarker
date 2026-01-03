@@ -23,6 +23,23 @@ A production-grade desktop GUI application for bulk video overlay and watermarki
 4. Install dependencies: `pip install -r requirements.txt`
 5. Ensure FFmpeg is installed: `sudo apt install ffmpeg` (on Linux)
 
+## Building
+
+To build a standalone executable for your platform (handles fresh clones automatically):
+
+```bash
+./build.sh
+```
+
+This script will:
+- Create a virtual environment if it doesn't exist
+- Install all required dependencies
+- Check for FFmpeg availability
+- Build the executable with PyInstaller
+- Output the executable in `dist/bulk-video-watermarker`
+
+The build script is designed for multi-platform use - run it on Linux, macOS, or Windows to build for that platform.
+
 ## Usage
 
 Activate the virtual environment and run the application:
@@ -38,14 +55,15 @@ Or use the provided run script:
 ./run.sh
 ```
 
-### Tabs
+### Interface
 
-- **Dashboard**: Overview and quick actions
-- **Bulk Processing**: Select input/output folders, watermark, settings, and process videos
-- **Overlay Editor**: Configure image, video, and text overlays
-- **Presets**: Manage presets (YouTube Shorts, TikTok, etc.)
-- **Export & Queue**: Manage export settings and processing queue
-- **Settings**: Application settings
+The application features a streamlined single-panel interface for bulk video processing:
+
+- **Input Folder**: Select the folder containing videos to process
+- **Output Folder**: Choose where processed videos will be saved
+- **Overlay Type**: Choose between Image, Video, or Text overlays
+- **Overlay Configuration**: Configure scale, position, opacity, and other settings
+- **Process Button**: Start bulk processing with real-time progress updates
 
 ### Presets
 
